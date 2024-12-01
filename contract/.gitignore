@@ -1,0 +1,4 @@
+build
+Move.lock
+.env
+.env.local
