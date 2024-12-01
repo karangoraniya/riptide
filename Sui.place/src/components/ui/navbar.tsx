@@ -72,11 +72,11 @@ const NavBar = () => {
       const coin = await coinWithBalance({ balance: depositAmount * (10 ** 9)});
       tx.moveCall({
         target:
-          "0x199966a7a1c77129602333f326d195014b83c00e568206724e1bb7136fd4e07f::treasury::deposit_to_treasury",
+          "0xf056c2631c508f5a6cf47c9da889da1c5ab7f9978da5fbe6078cfaf64caa3dbc::riptide::deposit_to_treasury",
         typeArguments: ["0x2::sui::SUI"],
         arguments: [
           tx.object(
-            "0x8c045ee7e244b043c19ade1a8c3c1834faed4ab7d4b84b3088707f4b58dd914c"
+            "0x03850d31b9c0d2a5302be53574c5f7fd634e4ab2c7a7ac4cf48d0876d569b154"
           ),
           tx.pure.string("@happy"),
           tx.object(coin),

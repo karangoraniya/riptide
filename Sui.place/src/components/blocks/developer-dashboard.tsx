@@ -1,0 +1,315 @@
+"use client";
+import Link from "next/link";
+import {
+  Activity,
+  ArrowUpRight,
+  CircleUser,
+  CreditCard,
+  Search,
+  Users,
+} from "lucide-react";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useSuiLink } from "../contexts/suilink-context";
+import { useEffect,useState } from "react";
+
+const transactions = [
+  {
+    username: "Alice",
+    roomName: "Room A",
+    community: "Doubleup",
+    date: "2024-11-20",
+    rankAchieved: 1,
+  },
+  {
+    username: "Bob",
+    roomName: "Room B",
+    community: "Prime Machine",
+    date: "2024-11-21",
+    rankAchieved: 12,
+  },
+  {
+    username: "Charlie",
+    roomName: "Room C",
+    community: "Rooters",
+    date: "2024-11-22",
+    rankAchieved: 13,
+  },
+  {
+    username: "David",
+    roomName: "Room D",
+    community: "Sui Frens",
+    date: "2024-11-23",
+    rankAchieved: 3,
+  },
+  {
+    username: "Eva",
+    roomName: "Room E",
+    community: "Doubleup",
+    date: "2024-11-24",
+    rankAchieved: 5,
+  },
+  {
+    username: "Frank",
+    roomName: "Room F",
+    community: "Prime Machine",
+    date: "2024-11-25",
+    rankAchieved: 10,
+  },
+  {
+    username: "Grace",
+    roomName: "Room G",
+    community: "Rooters",
+    date: "2024-11-26",
+    rankAchieved: 17,
+  },
+  {
+    username: "Henry",
+    roomName: "Room H",
+    community: "Sui Frens",
+    date: "2024-11-27",
+    rankAchieved: 3,
+  },
+  {
+    username: "Isabel",
+    roomName: "Room I",
+    community: "Doubleup",
+    date: "2024-11-28",
+    rankAchieved: 30,
+  },
+  {
+    username: "Jack",
+    roomName: "Room J",
+    community: "Prime Machine",
+    date: "2024-11-29",
+    rankAchieved: 10,
+  },
+];
+
+export default function Dashboard() {
+  const { suiName, fetch } = useSuiLink();
+  const [depositBalance, setDepositBalance] = useState(0);
+  useEffect(() => {
+    let dep = localStorage.getItem("deposit");
+    if (dep) {
+      dep = JSON.parse(dep);
+      setDepositBalance(Number(dep));
+    }
+
+  }, []);
+  return (
+    <div className="flex min-h-screen w-full flex-col">
+      <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
+        {/* NAV BAR */}
+        <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
+          {/* MENU SHEET */}
+
+          <Link
+            href="/"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Home
+          </Link>
+          <Link
+            href="/dashboard"
+            className="text-foreground transition-colors hover:text-foreground"
+          >
+            Dashboard
+          </Link>
+        </nav>
+
+        <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
+          <form className="ml-auto flex-1 sm:flex-initial">
+            <div className="relative">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search trx..."
+                className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
+              />
+            </div>
+          </form>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="secondary" className="rounded-full">
+                <CircleUser className="h-5 w-5" />
+                <span className="sr-only">Toggle user menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Settings</DropdownMenuItem>
+              <DropdownMenuItem>Support</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Logout</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </header>
+      <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+        <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-md font-medium">Username</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-1xl font-bold text-blue-500">{suiName}</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-md font-medium">
+                Total Games Played
+              </CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-4xl font-bold text-blue-500">12</div>
+            </CardContent>
+          </Card>
+          <Card x-chunk="A card showing the total sales and the percentage difference from last month.">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-md font-medium">Sui Earned</CardTitle>
+              <CreditCard className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-4xl font-bold text-green-500">7 Sui</div>
+            </CardContent>
+          </Card>
+          <Card x-chunk="A card showing the total active users and the percentage difference from last hour.">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-md font-medium">Balance</CardTitle>
+              <Activity className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-4xl font-bold text-blue-500">{depositBalance} sui</div>
+            </CardContent>
+          </Card>
+        </div>
+        <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
+          <Card
+            className="xl:col-span-2"
+            x-chunk="A card showing a table of recent transactions with a link to view all transactions."
+          >
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div className="grid gap-2">
+                <CardTitle>Player History</CardTitle>
+                <CardDescription>
+                  Recent transactions from your games.
+                </CardDescription>
+              </div>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  placeholder="Enter .riptide Name"
+                  className="border border-gray-300 rounded-md px-4 py-1"
+                />
+                <Button asChild size="sm" className="ml-auto gap-1">
+                  <Link href="#">Buy Riptide Name</Link>
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Username</TableHead>
+                    <TableHead>Room Name</TableHead>
+                    <TableHead>Community</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Rank Achieved</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {transactions.map((transaction, id) => {
+                    return (
+                      <>
+                        <TableRow key={id}>
+                          <TableCell>
+                            <div className="font-medium lowercase">
+                              @nikku876
+                            </div>
+                          </TableCell>
+                          <TableCell className=" ">
+                            {transaction.roomName}
+                          </TableCell>
+                          <TableCell className=" ">
+                            <Badge
+                              className="text-xs bg-blue-50 text-blue-500"
+                              variant="outline"
+                            >
+                              {transaction.community}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="md:table-cell">
+                            {transaction.date}
+                          </TableCell>
+                          <TableCell>{transaction.rankAchieved}</TableCell>
+                        </TableRow>
+                      </>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+          <Card x-chunk="A card showing a list of recent sales with customer names and email addresses.">
+            <CardHeader>
+              <CardTitle>NFT's you hold</CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-2">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-row  w-48 rounded-lg shadow-xl border-8 border-blue-500 h-48 items-center space-x-2">
+                  <img
+                    src="https://tradeport.mypinata.cloud/ipfs/QmSk9wP9m1wRohnZZcz6GfuwnBrvvF1QWXDwr1Erb6QzG3?pinataGatewayToken=sd9Ceh-eJIQ43PRB3JW6QGkHAr8-cxGhhjDF0Agxwd_X7N4_reLPQXZSP_vUethU&img-width=500&img-height=500&img-fit=cover&img-quality=80&img-onerror=redirect&img-fit=pad&img-format=webp"
+                    alt="Community"
+                  />
+                </div>
+                <div className="flex flex-row  w-48 rounded-lg shadow-xl border-8 border-blue-500 h-48 items-center space-x-2">
+                  <img
+                    src="https://img.sm.xyz/0xc94a37b7a848963fc6ae28bf8ad6bb18e07ed932cfbf6d9cd9c16e0b9108b378/"
+                    alt="Community"
+                  />
+                </div>
+                <div className="flex flex-row  w-48 rounded-lg shadow-xl border-8 border-blue-500 h-48 items-center space-x-2">
+                  <img
+                    src="https://tradeport.mypinata.cloud/ipfs/QmWFurw6xktFkSvKRLWwoNHtPcUBGJDpimECYiz3PJXqMn?pinataGatewayToken=sd9Ceh-eJIQ43PRB3JW6QGkHAr8-cxGhhjDF0Agxwd_X7N4_reLPQXZSP_vUethU&img-width=500&img-height=500&img-fit=cover&img-quality=80&img-onerror=redirect&img-fit=pad&img-format=webp"
+                    alt="Community"
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </main>
+    </div>
+  );
+}
