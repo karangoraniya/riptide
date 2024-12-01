@@ -1,7 +1,8 @@
 "use client";
-import React, {useEffect, useState } from "react";
+import React, { ReactNode, use, useEffect, useState } from "react";
 import {
   MenuIcon,
+  SearchIcon,
   HandCoins,
   X,
   CircleUser,
@@ -12,6 +13,7 @@ import { Button } from "./button";
 import Link from "next/link";
 
 import {
+  ConnectButton,
   useCurrentAccount,
   useSignAndExecuteTransaction,
 } from "@mysten/dapp-kit";

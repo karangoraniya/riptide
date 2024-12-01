@@ -8,8 +8,10 @@ import {
   Search,
   Users,
 } from "lucide-react";
-
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { SuiClient } from "@mysten/sui/client";
+import toast from "react-hot-toast";
+import { Transaction } from "@mysten/sui/transactions";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,7 +40,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useSuiLink } from "../contexts/suilink-context";
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 
 const transactions = [
   {
@@ -116,13 +118,118 @@ const transactions = [
 export default function Dashboard() {
   const { suiName, fetch } = useSuiLink();
   const [depositBalance, setDepositBalance] = useState(0);
+  const [suiEns, setSuiEns] = useState("");
+  const keyPair = Ed25519Keypair.fromSecretKey(
+    process.env.NEXT_PUBLIC_PRIVATE_KEY
+  );
+  const client = new SuiClient({ url: " https://rpc-testnet.suiscan.xyz" });
+  const subBuy = async (suiEns: string) => {
+    let id = toast.loading("Buing Sub Domain on Riptide...");
+    const tx = new Transaction();
+
+    const domain = tx.moveCall({
+      target:
+        "0x3c272bc45f9157b7818ece4f7411bdfa8af46303b071aca4e18c03119c9ff636::subdomains::new",
+      arguments: [
+        tx.object(
+          "0x300369e8909b9a6464da265b9a5a9ab6fe2158a040e84e808628cde7a07ee5a3"
+        ), //shared object
+        tx.object(
+          "0xe65d765f6c2724c36b4ad87b422e8894269d1a6297cdda79a2aac6e211cebd33"
+        ), // sui ns registry
+
+        tx.object(
+          "0x6" // time
+        ),
+        tx.pure.string(
+          suiEns // time
+        ), // domain name
+        tx.pure.u64(
+          "1764591560456" // time
+        ),
+        tx.pure.bool(true), // create additional subdomain
+        tx.pure.bool(true),
+      ],
+    });
+
+    tx.transferObjects(
+      [domain],
+      "0xea79685a73bf25b058a0347e26678053368d3a11e245cdd5334eb8d9f31efcf4" // receiver address
+    );
+
+    const response = client.signAndExecuteTransaction({
+      signer: keyPair,
+      transaction: tx,
+      options: {
+        showEffects: true,
+      },
+    });
+    toast.success("Sub Domain Bought Successfully", { id });
+
+
+    // const resp: any = await client.getOwnedObjects({
+    //   owner:
+    //     "0x83aaa821e548aa3ae84747f14bf3df4fef53718eafc5c6bfdb8cc5d67714b62a",
+    //   filter: {
+    //     StructType:
+    //       "0x22fa05f21b1ad71442491220bb9338f7b7095fe35000ef88d5400d28523bdd93::subdomain_registration::SubDomainRegistration",
+    //   },
+    //   options: {
+    //     showType: true,
+    //     showContent: true,
+    //     showDisplay: true,
+    //   },
+    // });
+    // console.log("resp", resp);
+
+    // // Extract domain names and handle the response
+    // const extractDomainName = (response: any) => {
+    //   // Check if there's data and it's an array
+    //   if (!response?.data || !Array.isArray(response.data)) {
+    //     return null;
+    //   }
+
+    //   // Get all domain names
+    //   const domainNames: any = response.data
+    //     .map(
+    //       (item: {
+    //         data: {
+    //           content: { fields: { nft: { fields: { domain_name: any } } } };
+    //         };
+    //       }) => item?.data?.content?.fields?.nft?.fields?.domain_name
+    //     )
+    //     .filter(Boolean);
+
+    //   // Check length
+    //   console.log(`Found ${domainNames.length} domain names`);
+
+    //   // Return first domain name if exists, otherwise null
+    //   return domainNames.length > 0 ? domainNames[0] : null;
+    // };
+
+    // // Get the domain name
+    // const domainName: any = extractDomainName(resp);
+    // console.log("Domain Name:", domainName);
+
+    // // If you want to see all domain names (optional)
+    // const allDomainNames = resp.data
+    //   ?.map(
+    //     (item: {
+    //       data: {
+    //         content: { fields: { nft: { fields: { domain_name: any } } } };
+    //       };
+    //     }) => item?.data?.content?.fields?.nft?.fields?.domain_name
+    //   )
+    //   .filter(Boolean);
+    // console.log("All Domain Names:", allDomainNames);
+  };
+
   useEffect(() => {
     let dep = localStorage.getItem("deposit");
     if (dep) {
       dep = JSON.parse(dep);
       setDepositBalance(Number(dep));
     }
-
   }, []);
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -210,7 +317,9 @@ export default function Dashboard() {
               <Activity className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-4xl font-bold text-blue-500">{depositBalance} sui</div>
+              <div className="text-4xl font-bold text-blue-500">
+                {depositBalance} sui
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -229,11 +338,22 @@ export default function Dashboard() {
               <div className="flex gap-2">
                 <input
                   type="text"
+                  onChange={(e) => setSuiEns(e.target.value)}
+                  value={suiEns}
                   placeholder="Enter .riptide Name"
                   className="border border-gray-300 rounded-md px-4 py-1"
                 />
-                <Button asChild size="sm" className="ml-auto gap-1">
-                  <Link href="#">Buy Riptide Name</Link>
+                <Button
+                  onClick={() => {
+                    if (suiEns) {
+                      subBuy(suiEns);
+                    }
+                  }}
+                  asChild
+                  size="sm"
+                  className="ml-auto gap-1"
+                >
+                  Buy Riptide Name
                 </Button>
               </div>
             </CardHeader>
