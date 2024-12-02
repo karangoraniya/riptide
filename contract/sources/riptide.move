@@ -1,5 +1,5 @@
 
-module treasuryfun::treasury {
+module riptide::riptide;
 
 
         use sui::balance::{Self, Balance};
@@ -10,7 +10,7 @@ module treasuryfun::treasury {
         use sui::clock::{Self, Clock};
 
         // One-time witness for initialization
-        public struct TREASURY has drop {}
+        public struct RIPTIDE has drop {}
 
         /// Status of the game
         const STATUS_CREATED: u8 = 0;
@@ -107,7 +107,7 @@ module treasuryfun::treasury {
         }
 
 
-         fun init(_witness: TREASURY, ctx: &mut TxContext) {
+         fun init(_witness: RIPTIDE, ctx: &mut TxContext) {
             let sender = tx_context::sender(ctx);
             
             // Create the main treasury
@@ -369,6 +369,7 @@ module treasuryfun::treasury {
             treasury: &mut Treasury<T>,
             _cap: &TreasuryCap,
             amount: u64,
+            receiver: address,
             ctx: &mut TxContext
         ) {
             let sender = tx_context::sender(ctx);
@@ -380,7 +381,6 @@ module treasuryfun::treasury {
                 balance::split(&mut treasury.balance, amount),
                 ctx
             );
-            transfer::public_transfer(withdraw_coin, sender);
+            transfer::public_transfer(withdraw_coin, receiver);
         }
         
-    }
