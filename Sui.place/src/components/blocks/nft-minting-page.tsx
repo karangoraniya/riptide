@@ -48,7 +48,7 @@ export function PrivateRoomPage() {
   const currentAccount = useCurrentAccount();
 
 
-  const createRoom = async (nftName:string,roomName:string,gameName:string,amount:number): Promise<void> => {
+  const createRoom = async (nftName:string,roomName:string,gameName:string,amount:number) => {
     const id = toast.loading("Depositing...");
 
     try {
@@ -74,8 +74,9 @@ export function PrivateRoomPage() {
         throw new Error("No wallet connected");
       }
       tx.setSender(currentAccount.address);
+      const serializedTx = await tx.serialize();
       await signAndExecuteTransaction(
-        { transaction: tx },
+        { transaction: serializedTx },
         {
           onSuccess: (result: any) => {
             console.log("Transaction executed:", result);

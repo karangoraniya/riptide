@@ -69,16 +69,12 @@ export const SuiLinkProvider: React.FC<{ children: React.ReactNode }> = ({
       });   
     
       // Get the domain name
-      const domainName: any = extractDomainName(resp);
+      const domainName = extractDomainName(resp);
       console.log("Domain Name:", domainName);
       // If you want to see all domain names (optional)
       const allDomainNames = resp.data
         ?.map(
-          (item: {
-            data: {
-              content: { fields: { nft: { fields: { domain_name: any } } } };
-            };
-          }) => item?.data?.content?.fields?.nft?.fields?.domain_name
+          (item:any) => item?.data?.content?.fields?.nft?.fields?.domain_name
         )
         .filter(Boolean);
         setSuiName(allDomainNames[0]);
@@ -107,7 +103,7 @@ export const SuiLinkProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   return (
-    <SuiLinkContext.Provider value={{ isConnected, address, setConnection,suiName,fetch }}>
+    <SuiLinkContext.Provider value={{ isConnected, address,setSuiName, setConnection,suiName,fetch }}>
       <QueryClientProvider client={queryClient}>
         <SuiClientProvider networks={networkConfig} defaultNetwork="testnet">
           <WalletProvider

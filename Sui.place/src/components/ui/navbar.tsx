@@ -87,9 +87,9 @@ const NavBar = () => {
         throw new Error("No wallet connected");
       }
       tx.setSender(currentAccount.address);
-
+      const serializedTx = await tx.serialize();
       await signAndExecuteTransaction(
-        { transaction: tx },
+        { transaction: serializedTx },
         {
           onSuccess: (result: any) => {
             updateLocalStorageDeposit(depositAmount);
