@@ -33,24 +33,7 @@ export default function GameDetailsPage({
     setBets(storedBets);
   }, []);
 
-  // const handleSuiDepositAmount = (amount) => {
-  //   const selectedOption = document.querySelector('input[name="radio"]:checked')?.id;
-  //   if (!selectedOption) {
-  //     alert("Please select Head or Tail!");
-  //     return;
-  //   }
-
-  //   const newBet = {
-  //     user: "Nikku.riptide.sui", // Replace with dynamic user data if needed
-  //     amount: `${amount} Sui`,
-  //     result: selectedOption.charAt(0).toUpperCase() + selectedOption.slice(1), // Capitalize
-  //   };
-
-  //   // Update local storage
-  //   const updatedBets = [...bets, newBet];
-  //   localStorage.setItem("bets", JSON.stringify(updatedBets));
-  //   setBets(updatedBets); // Update state to re-render table
-  // };
+ 
   const delay = async (ms: number) => new Promise((res) => setTimeout(res, ms));
   const handleFlip = () => {
     if (isFlipping) return;
@@ -73,7 +56,7 @@ export default function GameDetailsPage({
     const saved = window?.localStorage?.getItem("deposit");
     console.log(saved);
     if (saved) {
-      setActualDepositAmount(Number(JSON.parse(saved)));
+      setActualDepositAmount(Number(JSON.parse(saved)) ? Number(JSON.parse(saved)) : 0);
     }
   }, []);
   const handleSuiDepositAmount = async (amt: number) => {
@@ -93,7 +76,7 @@ export default function GameDetailsPage({
       }
 
       const newBet = {
-        user: "Karan.riptide.sui", // Replace with dynamic user data if needed
+        user: "karan.riptide.sui", // Replace with dynamic user data if needed
         amount: `${amt} Sui`,
         result:
           selectedOption.charAt(0).toUpperCase() + selectedOption.slice(1), // Capitalize
@@ -108,7 +91,7 @@ export default function GameDetailsPage({
       toast.success("Bet Placed successfully",{id});
       let idc = toast.loading("Flipping the coin...");
       await delay(3000);
-      const isHeads = Math.random() < 0.5;
+      const isHeads = Math.random() < 0.6;
       if (
         (isHeads && selectedOption === "heads") ||
         (!isHeads && selectedOption === "tails")
@@ -119,7 +102,7 @@ export default function GameDetailsPage({
       }
       router.push("/games/1");
     } else {
-      toast.error("Insufficient SUI balance");
+      toast.error("Insufficient SUI balance",{id});
     }
   };
 
