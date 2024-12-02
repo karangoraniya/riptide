@@ -120,13 +120,14 @@ export default function Dashboard() {
   const [depositBalance, setDepositBalance] = useState(0);
   const [suiEns, setSuiEns] = useState("");
   const keyPair = Ed25519Keypair.fromSecretKey(
-    process.env.NEXT_PUBLIC_PRIVATE_KEY
+    "suiprivkey1qqylafxqfue6z2evsmpyavxygdavg275gf4jqdz4q5kr9xyxeshgjalw0gj"
   );
   const client = new SuiClient({ url: " https://rpc-testnet.suiscan.xyz" });
+  const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
   const subBuy = async (suiEns: string) => {
     let id = toast.loading("Buing Sub Domain on Riptide...");
     const tx = new Transaction();
-
+    await delay(3000);
     const domain = tx.moveCall({
       target:
         "0x3c272bc45f9157b7818ece4f7411bdfa8af46303b071aca4e18c03119c9ff636::subdomains::new",
@@ -142,8 +143,8 @@ export default function Dashboard() {
           "0x6" // time
         ),
         tx.pure.string(
-          suiEns // time
-        ), // domain name
+          `${suiEns}.riptide.sui` 
+        ), 
         tx.pure.u64(
           "1764591560456" // time
         ),
@@ -341,7 +342,7 @@ export default function Dashboard() {
                   onChange={(e) => setSuiEns(e.target.value)}
                   value={suiEns}
                   placeholder="Enter .riptide Name"
-                  className="border border-gray-300 rounded-md px-4 py-1"
+                  className="border border-gray-300 rounded-md px-4 py-1 text-sm"
                 />
                 <Button
                   onClick={() => {
@@ -349,7 +350,7 @@ export default function Dashboard() {
                       subBuy(suiEns);
                     }
                   }}
-                  asChild
+                  
                   size="sm"
                   className="ml-auto gap-1"
                 >

@@ -1,7 +1,7 @@
 import React,{useState} from "react";
 
 const Roulette = () => {
-  const [balance, setBalance] = useState(1.0); // Starting balance in ETH
+  const [balance, setBalance] = useState(1.0); // Starting balance in Sui
   const [bets, setBets] = useState(Array(48).fill(0)); // Bets for numbers/sectors
   const [result, setResult] = useState(null); // Lucky number/result
   const [message, setMessage] = useState(""); // Result message
@@ -64,12 +64,12 @@ const Roulette = () => {
     if (winAmount >= betAmount) {
       setBalance(balance + winAmount - betAmount);
       setMessage(
-        `Lucky number: ${luckyNumber}. You won ${winAmount.toFixed(2)} ETH!`
+        `Lucky number: ${luckyNumber}. You won ${winAmount.toFixed(2)} Sui!`
       );
     } else {
       setBalance(balance - betAmount);
       setMessage(
-        `Lucky number: ${luckyNumber}. You lost ${betAmount.toFixed(2)} ETH.`
+        `Lucky number: ${luckyNumber}. You lost ${betAmount.toFixed(2)} Sui.`
       );
     }
     setBets(Array(48).fill(0)); // Reset bets
@@ -81,13 +81,13 @@ const Roulette = () => {
         <h1>Play Roullete as Royal</h1>
         <div className="roulette-table">
       <h2>Roulette Table</h2>
-      <div className="balance">Balance: {balance.toFixed(2)} ETH</div>
+      <div className="balance">Balance: {balance.toFixed(2)} Sui</div>
       <div className="bets">
         <h4>Your Bets:</h4>
         {bets.map((bet, index) =>
           bet > 0 ? (
             <div key={index}>
-              Bet on {index < 37 ? `Number ${index}` : sectors[index - 37]}: {bet * CurrentTier} ETH
+              Bet on {index < 37 ? `Number ${index}` : sectors[index - 37]}: {bet * CurrentTier} Sui
             </div>
           ) : null
         )}
