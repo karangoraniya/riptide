@@ -83,7 +83,7 @@ export default function GameDetailsPage({
       localStorage.setItem("deposit", JSON.stringify(updateAmount));
       setActualDepositAmount(updateAmount);
       await delay(2000);
-    
+
       const selectedOption = document.querySelector(
         'input[name="radio"]:checked'
       )?.id;
@@ -105,17 +105,18 @@ export default function GameDetailsPage({
       setBets(updatedBets); // Update state to re-render table
 
       handleFlip();
-      toast.success("Bet Placed successfully",{id});
-      let idc = toast.loading("Flipping the coin...");
+      toast.success("Bet Placed successfully", { id });
+      let flipId = toast.loading("Flipping the coin...");
+
       await delay(3000);
       const isHeads = Math.random() < 0.5;
       if (
         (isHeads && selectedOption === "heads") ||
         (!isHeads && selectedOption === "tails")
       ) {
-        toast.success("Bet won",{idc});
+        toast.success("Bet won", { id: flipId });
       } else {
-        toast.error("Bet lost",{idc});
+        toast.error("Bet lost", { id: flipId });
       }
       router.push("/games/1");
     } else {
